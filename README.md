@@ -14,8 +14,6 @@ This package makes you write them easily. This is useful not only for redux acti
 npm install @fsubal/algebraic-enum
 ```
 
-write how to use
-
 ```ts
 import algebraic, { nullary } from "@fsubal/algebraic-enum";
 
