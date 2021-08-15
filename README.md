@@ -17,61 +17,62 @@ npm install @fsubal/algebraic-enum
 write how to use
 
 ```ts
-import algebraic, { nullary } from '@fsubal/algebraic-enum'
+import algebraic, { nullary } from "@fsubal/algebraic-enum";
 
-const ItemAction = algebraic('ItemAction', {
+const ItemAction = algebraic("ItemAction", {
   loaded: nullary,
-  selectedOne: (nextId: number) => ({ nextId })
-})
+  selectedOne: (nextId: number) => ({ nextId }),
+});
 
-ItemAction.loaded() // => { type: 'ItemAction/loaded', payload: {} }
-ItemAction.selectedOne(1) // => { type: 'ItemAction/selectedOne', payload: { nextId: 1 } }
+ItemAction.loaded(); // => { type: 'ItemAction/loaded', payload: {} }
+ItemAction.selectedOne(1); // => { type: 'ItemAction/selectedOne', payload: { nextId: 1 } }
 ```
 
 You can get the type of all possible values using `Case<typeof ...>`
 
 ```ts
-import { Case, unreachable } from '@fsubal/algebraic-enum'
+import { Case, unreachable } from "@fsubal/algebraic-enum";
 
-type KnownItemAction = Case<typeof ItemAction> // { type: 'ItemAction/loaded', payload: {} } | { type: 'ItemAction/selectedOne', payload: { nextId: number } }
+type KnownItemAction = Case<typeof ItemAction>; // { type: 'ItemAction/loaded', payload: {} } | { type: 'ItemAction/selectedOne', payload: { nextId: number } }
 
-function reducer(state: State, action: KnownItemAction) {
-  switch(action.type) {
-    case 'ItemAction/loaded': {
-      state.loading = false
-      break
+const reducer = (currentState: State, action: KnownItemAction) =>
+  immer(currentState, (state) => {
+    switch (action.type) {
+      case "ItemAction/loaded": {
+        state.loading = false;
+        break;
+      }
+
+      case "ItemAction/selectedOne": {
+        // This IS inferred from action.type !!!!
+        const { nextId } = action.payload;
+        state.nextId = nextId;
+        break;
+      }
+
+      default: {
+        // You CAN check the cases are exhaustive
+        unreachable(action);
+      }
     }
-
-    case 'ItemAction/selectedOne': {
-      // This IS inferred from action.type !!!!
-      const { nextId } = action.payload
-      state.nextId = nextId
-      break
-    }
-
-    default: {
-      // You CAN check the cases are exhaustive
-      unreachable(action)
-    }
-  }
-}
+  });
 ```
 
 You can configure the delimiter using `createAlgebraic`. You will see the name of `type` is still perfectly inferred.
 
 ```ts
-import { createAlgebraic } from '@fsubal/algebraic-enum'
+import { createAlgebraic } from "@fsubal/algebraic-enum";
 
-const algebraic = createAlgebraic({ delimiter: '::' })
+const algebraic = createAlgebraic({ delimiter: "::" });
 
-const ItemAction = algebraic('ItemAction', {
+const ItemAction = algebraic("ItemAction", {
   loaded: nullary,
-  selectedOne: (nextId: number) => ({ nextId })
-})
+  selectedOne: (nextId: number) => ({ nextId }),
+});
 
-ItemAction.selectedOne(1) // => { type: 'ItemAction::selectedOne', payload: { nextId: 1 } }
+ItemAction.selectedOne(1); // => { type: 'ItemAction::selectedOne', payload: { nextId: 1 } }
 
-type KnownItemAction = Case<typeof ItemAction> // { type: 'ItemAction::loaded', payload: {} } | { type: 'ItemAction::selectedOne', payload: { nextId: number } }
+type KnownItemAction = Case<typeof ItemAction>; // { type: 'ItemAction::loaded', payload: {} } | { type: 'ItemAction::selectedOne', payload: { nextId: number } }
 ```
 
 ### Known limitations
@@ -82,12 +83,29 @@ You can workaround like this ( this is because it is "Poor man's ADT-like enum" 
 
 ```ts
 function Option<T = never>() {
-  return algebraic('Option', {
+  return algebraic("Option", {
     Some: (value: T) => value,
-    None: nullary
-  })
+    None: nullary,
+  });
 }
+
+Option<number>().Some(1);
 ```
+
+But you cannot use `Case<T>` for `Option<T>`. You will find that `Case<ReturnType<typeof Option>>` is like...
+
+```ts
+| {
+    type: "Option/Some";
+    payload: unknown; // Cannot be inferred
+  }
+| {
+    type: "Option/None";
+    payload: {};
+  }
+```
+
+This is rooted in TypeScript compiler's limitation ( you cannot use generic function for `ReturnType`. )
 
 ### Development
 
