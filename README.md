@@ -6,7 +6,7 @@ Poor man's ADT-like enum for TypeScript using template literal types.
 
 Mimicking Algebraic Data Type (ADT) using tagged union type is a popular pattern, like it is used in redux action creators.
 
-This package makes you write them easily, and useful for not only redux actions, but also for anything like "enum having values".
+This package makes you write them easily. This is useful not only for redux actions, but also for anything like "enum having values".
 
 ### How to use
 
