@@ -41,7 +41,7 @@ export default algebraic;
 export const nullary = () => ({});
 
 export const unreachable = (value: never) => {
-  throw new Error(`[algebraic] unreachable: ${JSON.stringify(value)}`);
+  throw new Error(`[algebraic-enum] unreachable: ${JSON.stringify(value)}`);
 };
 
 export const unreachableSilent = (value: never) => void value;
