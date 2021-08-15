@@ -128,6 +128,23 @@ But you cannot use `Case<T>` for `Option<T>`. You will find that `Case<ReturnTyp
 
 This is rooted in TypeScript compiler's limitation ( you cannot use generic function for `ReturnType`. )
 
+But you can do this instead.
+
+```ts
+function Option<T = never>() {
+  return algebraic("Option", {
+    Some: (value: T) => value,
+    None: nullary,
+  });
+}
+
+const OptionNumber = Option<number>();
+
+OptionNumber.Some(1);
+
+type KnownOptionNumber = Case<typeof OptionNumber>;
+```
+
 ### Development
 
 WIP
