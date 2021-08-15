@@ -31,7 +31,7 @@ ItemAction.selectedOne(1); // => { type: 'ItemAction/selectedOne', payload: { ne
 You can get the type of all possible values using `Case<typeof ...>`
 
 ```ts
-import { Case, unreachable } from "@fsubal/algebraic-enum";
+import { Case, unreachable, unreachableSilent } from "@fsubal/algebraic-enum";
 
 type KnownItemAction = Case<typeof ItemAction>; // { type: 'ItemAction/loaded', payload: {} } | { type: 'ItemAction/selectedOne', payload: { nextId: number } }
 
@@ -53,6 +53,9 @@ const reducer = (currentState: State, action: KnownItemAction) =>
       default: {
         // You CAN check the cases are exhaustive
         unreachable(action);
+
+        // use `unreachableSilent` if you do not want to throw an error
+        unreachableSilent(action);
       }
     }
   });
