@@ -3,8 +3,8 @@ interface Option<Delimiter extends string> {
 }
 
 type AlgebraicDataTypeDeclaration<
-  Delimiter extends string,
   Namespace extends string,
+  Delimiter extends string,
   Members extends Record<string, (...args: any[]) => any>
 > = {
   [MemberName in keyof Members]: (...args: Parameters<Members[MemberName]>) => {
@@ -15,7 +15,7 @@ type AlgebraicDataTypeDeclaration<
   };
 };
 
-export function createAlgebraic<Delimiter extends string = "/">({
+export function createAlgebraic<Delimiter extends string>({
   delimiter,
 }: Option<Delimiter>) {
   return function algebraic<
@@ -30,7 +30,7 @@ export function createAlgebraic<Delimiter extends string = "/">({
           payload: fn(...args),
         }),
       ])
-    ) as unknown as AlgebraicDataTypeDeclaration<Delimiter, Namespace, Members>;
+    ) as unknown as AlgebraicDataTypeDeclaration<Namespace, Delimiter, Members>;
   };
 }
 
