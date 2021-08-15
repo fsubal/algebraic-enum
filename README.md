@@ -146,7 +146,24 @@ OptionNumber.Some(1);
 type KnownOptionNumber = Case<typeof OptionNumber>;
 ```
 
-Or if you would like to add richer behaviors, delegation/composition is recommended. See our [examples](/examples)
+Or if you would like to add richer behaviors, **delegation/composition inside class** is recommended. See our [examples](/examples)
+
+```ts
+class Option<T> {
+  private options = algebraic('Option', {
+    Some: (value: T) => value,
+    None: nullary,
+  })
+  
+  private value: Case<Option<T>['options']> = this.options.None()
+
+  constructor(value: T | null | undefined) {
+    if (value != null) {
+      this.value = this.options.Some(value)
+    }
+  }
+}
+```
 
 ### Development
 
