@@ -1,6 +1,6 @@
 {
-  "name": "@fsubal/typescript-package-template",
-  "version": "0.0.0",
+  "name": "@fsubal/algebraic-enum",
+  "version": "0.1.0",
   "main": "dist/index.min.js",
   "types": "dist/src/index.d.ts",
   "files": [
@@ -10,7 +10,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/fsubal/typescript-package-template"
+    "url": "https://github.com/fsubal/algebraic-enum"
   },
   "scripts": {
     "test": "jest",
