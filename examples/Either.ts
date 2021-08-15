@@ -48,7 +48,7 @@ export class Either<L, R> {
     return this.value.type === "Either/Right";
   }
 
-  map<U>(fn: (value: R) => U) {
+  map<U>(fn: (value: R) => NonNullable<U>) {
     switch (this.value.type) {
       case "Either/Right": {
         return new Either<L, U>({
@@ -63,14 +63,14 @@ export class Either<L, R> {
     }
   }
 
-  flatMap<U>(fn: (value: R) => Either<L, U>) {
+  flatMap<U>(fn: (value: R) => Either<L, NonNullable<U>>) {
     switch (this.value.type) {
       case "Either/Right": {
         return fn(this.value.payload);
       }
 
       case "Either/Left": {
-        return this as unknown as Either<L, U>;
+        return this as unknown as Either<L, NonNullable<U>>;
       }
     }
   }

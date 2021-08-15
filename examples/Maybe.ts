@@ -34,7 +34,7 @@ export class Maybe<T> {
     return this.value.type === "Maybe/Nothing";
   }
 
-  map<U>(fn: (value: T) => U) {
+  map<U>(fn: (value: T) => NonNullable<U>) {
     switch (this.value.type) {
       case "Maybe/Just": {
         return new Maybe<U>(fn(this.value.payload));
@@ -46,7 +46,7 @@ export class Maybe<T> {
     }
   }
 
-  flatMap<U>(fn: (value: T) => Maybe<U>) {
+  flatMap<U>(fn: (value: T) => Maybe<NonNullable<U>>) {
     switch (this.value.type) {
       case "Maybe/Just": {
         return fn(this.value.payload);
