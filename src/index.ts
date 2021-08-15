@@ -2,7 +2,7 @@ interface Option<Delimiter extends string> {
   delimiter: Delimiter;
 }
 
-type AlgebraicDataTypeDeclaration<
+export type AlgebraicDataTypeDeclaration<
   Namespace extends string,
   Delimiter extends string,
   Members extends Record<string, (...args: any[]) => any>
