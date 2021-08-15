@@ -79,6 +79,27 @@ type KnownItemAction = Case<typeof ItemAction>; // { type: 'ItemAction::loaded',
 
 This package cannot create enum with generic type (like `Option<T>` or `Either<L, R>`) in streight manner.
 
+```ts
+// YOU CANNOT DO THIS !!!
+const Option = algebraic<T>("Option", {
+  Some(value: T) {
+    return value;
+  },
+  None: nullary,
+});
+
+// YOU CANNOT DO THIS TOO !!!
+const Option = algebraic("Option", {
+  Some<T>(value: T) {
+    return value;
+  },
+  None: nullary,
+});
+
+// This will be `unknown` type...
+Option.Some(1).payload;
+```
+
 You can workaround like this ( this is because it is "Poor man's ADT-like enum" ).
 
 ```ts
