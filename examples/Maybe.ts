@@ -26,7 +26,7 @@ export class Maybe<T> {
     return new this<T>(null);
   }
 
-  isjust() {
+  isJust() {
     return this.value.type === "Maybe/Just";
   }
 

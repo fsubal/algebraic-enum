@@ -129,7 +129,7 @@ But you cannot use `Case<T>` for `Option<T>`. You will find that `Case<ReturnTyp
 
 This is rooted in TypeScript compiler's limitation ( you cannot use generic function for `ReturnType`. )
 
-But you can do this instead.
+You can do this instead.
 
 ```ts
 function Option<T = never>() {
@@ -145,6 +145,8 @@ OptionNumber.Some(1);
 
 type KnownOptionNumber = Case<typeof OptionNumber>;
 ```
+
+Or if you would like to add richer behaviors, delegation/composition is recommended. See our [examples](/examples)
 
 ### Development
 
