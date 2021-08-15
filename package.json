@@ -1,6 +1,6 @@
 {
   "name": "@fsubal/algebraic-enum",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "main": "dist/index.min.js",
   "types": "dist/src/index.d.ts",
   "files": [
