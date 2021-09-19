@@ -8,7 +8,7 @@ export class Either<L, R> {
 
   private value: Case<Either<L, R>['cases']>
 
-  private constructor(fn: () => R, private isValidLeft: ((e: unknown) => e is L)) {
+  constructor(fn: () => R, private isValidLeft: ((e: unknown) => e is L)) {
     try {
       this.value = this.cases.Right(fn())
     } catch (e: unknown) {
