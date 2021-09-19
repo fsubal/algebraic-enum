@@ -1,42 +1,21 @@
-import { AlgebraicDataTypeDeclaration, Case } from "../src";
-
-type Cases<L, R> = AlgebraicDataTypeDeclaration<
-  "Either",
-  "/",
-  {
-    Left(value: L): L;
-    Right(value: R): R;
-  }
->;
+import algebraic, { Case } from "../src";
 
 export class Either<L, R> {
-  private constructor(private value: Case<Cases<L, R>>) {}
+  private cases = algebraic('Either', {
+    Left: (value: L) => value,
+    Right: (value: R) => value
+  })
 
-  static try<L, R>(fn: () => R) {
-    try {
-      return new Either<L, R>({
-        type: "Either/Right",
-        payload: fn(),
-      });
-    } catch (e: unknown) {
-      return new Either<L, R>({
-        type: "Either/Left",
-        payload: e as L,
-      });
-    }
-  }
+  private value: Case<Either<L, R>['cases']>
 
-  static async tryAsync<L, R>(fn: () => Promise<R>) {
+  private constructor(fn: () => R, private isValidLeft: ((e: unknown) => e is L)) {
     try {
-      return new Either<L, R>({
-        type: "Either/Right",
-        payload: await fn(),
-      });
+      this.value = this.cases.Right(fn())
     } catch (e: unknown) {
-      return new Either<L, R>({
-        type: "Either/Left",
-        payload: e as L,
-      });
+      if (!isValidLeft(e)) {
+        throw e
+      }
+      this.value = this.cases.Left(e)
     }
   }
 
@@ -51,10 +30,8 @@ export class Either<L, R> {
   map<U>(fn: (value: R) => NonNullable<U>) {
     switch (this.value.type) {
       case "Either/Right": {
-        return new Either<L, U>({
-          type: "Either/Right",
-          payload: fn(this.value.payload),
-        });
+        const { payload } = this.value
+        return new Either<L, U>(() => fn(payload), this.isValidLeft);
       }
 
       case "Either/Left": {
